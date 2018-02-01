@@ -61,17 +61,31 @@ export default {
                 return a.name.localeCompare(b.name);
             });
 
-            for (var i = 0; i < files.length; i++) {
+            this.loadImages(files);
+        },
+        getImage (file) {
+            return new Promise(function (resolve, reject) {
                 var reader = new FileReader();
-                reader.onload = function() {
-                    var image_element = new Image;
-                    image_element.onload = function() {
-                        images.push(this);
-                    }
-                    image_element.src = this.result;
-                }
-                reader.readAsDataURL(files[i]);
-            }
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(file);
+            })
+            .then(function (result) {
+                return new Promise(function (resolve, reject) {
+                     var image_element = new Image;
+                     image_element.onload = () => resolve(image_element);
+                     image_element.src = result;
+                })
+            })
+        },
+        loadImages (files) {
+            var promises = files.map(this.getImage);
+            var images = this.images;
+
+            Promise.all(promises).then(function(image_elements) {
+                images.push.apply(images, image_elements);
+            }).catch(function(image_elements) {
+                console.log('Error loading images')
+            })
         }
     }
 }
