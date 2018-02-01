@@ -56,6 +56,11 @@ export default {
             var images = this.images;
             images.splice(0, images.length);
 
+            var files = [].slice.call(event.target.files);
+            files.sort(function(a, b) {
+                return a.name.localeCompare(b.name);
+            });
+
             for (var i = 0; i < event.target.files.length; i++) {
                 var reader = new FileReader();
                 reader.onload = function() {
