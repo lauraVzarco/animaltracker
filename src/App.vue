@@ -61,7 +61,7 @@ export default {
                 return a.name.localeCompare(b.name);
             });
 
-            for (var i = 0; i < event.target.files.length; i++) {
+            for (var i = 0; i < files.length; i++) {
                 var reader = new FileReader();
                 reader.onload = function() {
                     var image_element = new Image;
@@ -70,7 +70,7 @@ export default {
                     }
                     image_element.src = this.result;
                 }
-                reader.readAsDataURL(event.target.files[i]);
+                reader.readAsDataURL(files[i]);
             }
         }
     }
