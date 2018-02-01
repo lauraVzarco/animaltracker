@@ -64,7 +64,7 @@ export default {
                 .enter().append("circle")
                 .attr("cx", function(d) { return d.x; })
                 .attr("cy", function(d) { return d.y; })
-                .attr("r", "20px")
+                .attr("r", function(d) { return 10 / vm.transform.scale })
                 .attr("fill", function(d) { return d.frame == vm.frame ? "white" : "black" })
                 .call(d3.drag().on("drag", this.dragPoint));
         },
@@ -73,6 +73,7 @@ export default {
             this.circles
                 .attr("cx", function(d) { return d.x; })
                 .attr("cy", function(d) { return d.y; })
+                .attr("r", function(d) { return 10 / vm.transform.scale })
                 .attr("fill", function(d) { return d.frame == vm.frame ? "white" : "black" })
         },
         createLines () {
@@ -106,6 +107,9 @@ export default {
             this.createLines();
             d3.select(this.$el).selectAll('circle').remove();
             this.createPoints();
+        },
+        'transform.scale': function () {
+            this.updatePoints();
         },
         frame: function () {
             this.updateLines();
