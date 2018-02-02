@@ -33,7 +33,7 @@ export default {
     },
     methods: {
         exportCSV () {
-            var output = [["x", "y", "frame_number", "sequence_id"]];
+            var output = [["x", "y", "frame_number", "sequence_id", "sequence_annotation"]];
             var sep = ',';
             for (var i = 0; i < this.sequences.length; i++) {
                 var points = this.sequences[i].points.concat();
@@ -41,7 +41,7 @@ export default {
                     return a.frame - b.frame;
                 });
                 for (var j = 0; j < points.length; j++) {
-                    output.push([points[j].x, points[j].y, points[j].frame, i].join(','));
+                    output.push([points[j].x, points[j].y, points[j].frame, i, this.sequences[i].name].join(','));
                 }
             }
             output = output.join('\n');
