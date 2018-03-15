@@ -9,6 +9,8 @@
 
         <Interface :sequences="sequences" :images="images" class="container" :current="current"/>
 
+        <Progress v-if="progress.loading" :progress="progress"></Progress>
+
         <div class="container">
             <DataList :sequences="sequences" :current="current"/>
         </div>
@@ -18,17 +20,20 @@
 <script>
 import DataList from './components/DataList.vue'
 import Interface from './components/Interface.vue'
+import Progress from './components/Progress.vue'
 
 export default {
 	components: {
         DataList,
-		Interface
+		Interface,
+        Progress
 	},
     data () {
         return {
             images: [],
             sequences: [],
-            current: {frame: 0, sequence: -1}
+            current: {frame: 0, sequence: -1},
+            progress: {loading: false, loaded: 0, total: 0}
         }
     },
     methods: {
@@ -61,9 +66,12 @@ export default {
                 return a.name.localeCompare(b.name);
             });
 
+            this.progress.total = files.length;
+            this.progress.loaded = 0;
+            this.progress.loading = true;
             this.loadImages(files);
         },
-        getImage (file) {
+        getImage (file, progress) {
             return new Promise(function (resolve, reject) {
                 var reader = new FileReader();
                 reader.onload = () => resolve(reader.result);
@@ -74,15 +82,17 @@ export default {
                      var image_element = new Image;
                      image_element.onload = () => resolve(image_element);
                      image_element.src = result;
+                     progress.loaded++;
                 })
             })
         },
         loadImages (files) {
-            var promises = files.map(this.getImage);
-            var images = this.images;
+            var promises = files.map(file => {return this.getImage(file, this.progress)});
+            var app = this;
 
             Promise.all(promises).then(function(image_elements) {
-                images.push.apply(images, image_elements);
+                app.images.push.apply(app.images, image_elements);
+                app.progress.loading = false;
             }).catch(function(image_elements) {
                 console.log('Error loading images')
             })
