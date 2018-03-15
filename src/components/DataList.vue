@@ -2,7 +2,7 @@
     <div v-if="sequences.length > 0">
         <h3>Tracks</h3>
         <ul class="list-group">
-            <DataListItem v-for="sequence in sequences" :key="sequence.id" :sequence="sequence" :current="current" v-on:deleteSequence="sequences.splice(sequences.findIndex(x => x == sequence), 1)"/>
+            <DataListItem v-for="sequence in sortedSequences" :key="sequence.id" :sequence="sequence" :current="current" v-on:deleteSequence="sequences.splice(sequences.findIndex(x => x == sequence), 1)"/>
         </ul>
     </div>
 </template>
@@ -22,6 +22,13 @@ export default {
         current: {
             type: Object,
             required: true
+        }
+    },
+    computed: {
+        sortedSequences() {
+            var sorted = this.sequences.slice();
+            sorted.reverse();
+            return sorted
         }
     }
 }
