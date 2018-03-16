@@ -1,12 +1,17 @@
 <template>
     <li :class="['list-group-item', current.sequence == sequence.id ? 'selected' : '']" @click="selectSequence">
-        <span>Name</span>
-        <input type="text" v-model="sequence.name">
-        <span>
-            {{sequence.points.length}} point{{sequence.points.length > 1 ? 's' : ''}} [Image{{lastFrame > firstFrame ? 's' : ''}} <button title="jump to first image" style="padding: 0px" @click="current.frame = firstFrame">{{ firstFrame + 1 }}</button><span v-if="lastFrame > firstFrame"> to <button style="padding: 0px" title="jump to last image" @click="current.frame = lastFrame">{{ lastFrame + 1 }}</button></span>]
+        <span v-for="field in fields" key="field.id">
+            <span>{{field.charAt(0).toUpperCase() + field.slice(1)}}</span>
+            <input type="text">
         </span>
-        <button style="float:right" class="glyphicon glyphicon-remove" @click="deleteSequence" title="delete entire track"></button>
-        <button style="float:right" :class="['glyphicon', sequence.hidden ? 'glyphicon-eye-close' : 'glyphicon-eye-open']" @click="hideSequence" :title="action"></button>
+        <button @click="fields.push('foo')" class="glyphicon glyphicon-plus"></button>
+        <span style="float: right">
+            <span style="float: left; margin-right: 10px;">
+                {{sequence.points.length}} point{{sequence.points.length > 1 ? 's' : ''}} [Image{{lastFrame > firstFrame ? 's' : ''}} <button title="jump to first image" style="padding: 0px" @click="current.frame = firstFrame">{{ firstFrame + 1 }}</button><span v-if="lastFrame > firstFrame"> to <button style="padding: 0px" title="jump to last image" @click="current.frame = lastFrame">{{ lastFrame + 1 }}</button></span>]
+            </span>
+        <button :class="['glyphicon', sequence.hidden ? 'glyphicon-eye-close' : 'glyphicon-eye-open']" @click="hideSequence" :title="action"></button>
+        <button class="glyphicon glyphicon-remove" @click="deleteSequence" title="delete entire track"></button>
+        </span>
     </li>
 </template>
 
@@ -19,6 +24,10 @@ export default {
         },
         current: {
             type: Object,
+            required: true
+        },
+        fields: {
+            type: Array,
             required: true
         }
     },
@@ -64,6 +73,7 @@ export default {
     color: white;
 }
 input {
+    max-width: 15%;
     font-weight: normal
 }
 .selected button,input{
