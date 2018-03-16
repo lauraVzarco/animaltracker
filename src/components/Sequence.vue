@@ -21,6 +21,10 @@ export default {
       frame: {
           type: Number,
           required: true
+      },
+      options: {
+          type: Object,
+          required: true
       }
     },
     data () {
@@ -64,8 +68,10 @@ export default {
                 .enter().append("circle")
                 .attr("cx", function(d) { return d.x; })
                 .attr("cy", function(d) { return d.y; })
-                .attr("r", function(d) { return 10 / vm.transform.scale })
+                .attr("r", function(d) { return vm.options.markerSize / vm.transform.scale })
                 .attr("fill", function(d) { return d.frame == vm.frame ? "white" : "black" })
+                .attr("stroke", function(d) { return d.frame == vm.frame ? "black" : "white" })
+                .attr("stroke-width", function (d) { return 0.4 * vm.options.markerSize / vm.transform.scale })
                 .call(d3.drag().on("drag", this.dragPoint));
         },
         updatePoints () {
@@ -73,8 +79,10 @@ export default {
             this.circles
                 .attr("cx", function(d) { return d.x; })
                 .attr("cy", function(d) { return d.y; })
-                .attr("r", function(d) { return 10 / vm.transform.scale })
+                .attr("r", function(d) { return vm.options.markerSize / vm.transform.scale })
                 .attr("fill", function(d) { return d.frame == vm.frame ? "white" : "black" })
+                .attr("stroke", function(d) { return d.frame == vm.frame ? "black" : "white" })
+                .attr("stroke-width", function (d) { return 0.4 * vm.options.markerSize / vm.transform.scale })
         },
         createLines () {
             var vm = this;
@@ -86,7 +94,7 @@ export default {
                 .attr("y1", function(d) { return d.source.y; })
                 .attr("x2", function(d) { return d.target.x; })
                 .attr("y2", function(d) { return d.target.y; })
-                .attr("stroke-width", 2)
+                .attr("stroke-width", vm.options.markerSize / 2)
                 .attr("vector-effect", "non-scaling-stroke")
                 .attr("stroke", function(d) { return d.target.frame > vm.frame ? "red" : "blue" });
         },
@@ -97,6 +105,7 @@ export default {
                 .attr("y1", function(d) { return d.source.y; })
                 .attr("x2", function(d) { return d.target.x; })
                 .attr("y2", function(d) { return d.target.y; })
+                .attr("stroke-width", vm.options.markerSize / 2)
                 .attr("stroke", function(d) { return d.target.frame > vm.frame ? "red" : "blue"; })
         }
     },
@@ -110,6 +119,10 @@ export default {
         },
         'transform.scale': function () {
             this.updatePoints();
+        },
+        'options.markerSize': function () {
+            this.updatePoints();
+            this.updateLines();
         },
         frame: function () {
             this.updateLines();

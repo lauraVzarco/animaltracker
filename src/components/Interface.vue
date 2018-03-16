@@ -3,7 +3,7 @@
     	<svg id="main" width="960" height="540" overflow="hidden">
             <g>
                 <image v-if="images.length > 0" :href="background.src" :width="background.width" :height="background.height"/>
-                <Sequence v-for="sequence in sequences" :key="sequence.id" :sequence="sequence" :transform="transform" :mode="mode" :frame="current.frame"/>
+                <Sequence v-for="sequence in sequences" :key="sequence.id" :sequence="sequence" :transform="transform" :mode="mode" :frame="current.frame" :options="options"/>
             </g>
         </svg>
 
@@ -42,7 +42,11 @@ export default {
       current: {
         type: Object,
         required: true
-      }
+    },
+    options: {
+        type: Object,
+        required: true
+    }
     },
     computed: {
         background: function () {

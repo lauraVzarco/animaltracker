@@ -1,13 +1,17 @@
 <template>
 	<div id="app">
         <div id="header" class="container">
-            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-toolbar" style="width: 960px" role="toolbar" aria-label="Toolbar with button groups">
                 <input type="file" class="btn" @change="handleFiles" accept="image/*" multiple>
                 <button type="button" class="btn" @click="exportCSV">Export CSV</button>
+                <div id="options">
+                    Marker size: {{ options.markerSize }}
+                    <input id="markerSize" v-model.number="options.markerSize" type="range" min="1" max="20" step="1">
+                </div>
             </div>
         </div>
 
-        <Interface :sequences="sequences" :images="images" class="container" :current="current"/>
+        <Interface :sequences="sequences" :images="images" class="container" :current="current" :options="options"/>
 
         <Progress v-if="progress.loading" :progress="progress"></Progress>
 
@@ -33,7 +37,8 @@ export default {
             images: [],
             sequences: [],
             current: {frame: 0, sequence: -1},
-            progress: {loading: false, loaded: 0, total: 0}
+            progress: {loading: false, loaded: 0, total: 0},
+            options: {markerSize: 5}
         }
     },
     methods: {
@@ -100,3 +105,13 @@ export default {
     }
 }
 </script>
+
+<style>
+#options {
+    display: inline-block;
+    float: right;
+}
+#markerSize {
+    width: 150px;
+}
+</style>
