@@ -2,14 +2,11 @@
     <li :class="['list-group-item', current.sequence == sequence.id ? 'selected' : '']" @click="selectSequence">
         <span>Name</span>
         <input type="text" v-model="sequence.name">
-        <select>
-            <option disabled value="">Species</option>
-            <option>Species 1</option>
-            <option>Species 2</option>
-            <option>Species 3</option>
-        </select>
-        <button :class="['glyphicon', sequence.hidden ? 'glyphicon-eye-close' : 'glyphicon-eye-open']" @click="hideSequence" :title="action"></button>
-        <button class="glyphicon glyphicon-remove" @click="deleteSequence" title="delete entire track"></button>
+        <span>
+            {{lastFrame - firstFrame + 1}} Image{{lastFrame > firstFrame ? 's' : ''}} [<button title="jump to first image" style="padding: 0px" @click="current.frame = firstFrame">{{ firstFrame + 1 }}</button><span v-if="lastFrame > firstFrame"> to <button style="padding: 0px" title="jump to last image" @click="current.frame = lastFrame">{{ lastFrame + 1 }}</button></span>]
+        </span>
+        <button style="float:right" class="glyphicon glyphicon-remove" @click="deleteSequence" title="delete entire track"></button>
+        <button style="float:right" :class="['glyphicon', sequence.hidden ? 'glyphicon-eye-close' : 'glyphicon-eye-open']" @click="hideSequence" :title="action"></button>
     </li>
 </template>
 
@@ -33,6 +30,15 @@ export default {
     computed: {
         action: function () {
             return this.sequence.hidden ? 'show' : 'hide'
+        },
+        frameNumbers() {
+            return this.sequence.points.map(point => point.frame)
+        },
+        firstFrame() {
+            return Math.min(...this.frameNumbers)
+        },
+        lastFrame() {
+            return Math.max(...this.frameNumbers)
         }
     },
     methods: {
@@ -50,7 +56,17 @@ export default {
 </script>
 
 <style>
+.list-group-item {
+    font-weight: bold;
+}
 .selected {
-    background-color: #bbb;
+    background-color: #aaa;
+    color: white;
+}
+input {
+    font-weight: normal
+}
+.selected button,input{
+    color: black;
 }
 </style>

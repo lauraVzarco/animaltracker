@@ -10,9 +10,9 @@
         <div id="controls" class="container">
             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group" role="group">
-                    <button class="btn btn-secondary" @click="prevFrame">Previous</button>
+                    <button class="btn btn-secondary" @click="current.frame--">Previous</button>
                     <button class="btn btn-secondary">{{ current.frame + 1 }}</button>
-                    <button class="btn btn-secondary" @click="nextFrame">Next</button>
+                    <button class="btn btn-secondary" @click="current.frame++">Next</button>
                 </div>
                 <button class="btn" @click="resetView">Reset view</button>
                 <button class="btn" @click="switchMode">{{ mode == 'add' ? 'Add mode' : 'Edit mode' }}</button>
@@ -101,12 +101,6 @@ export default {
             this.current.sequence = new_id;
             this.mode = 'add';
         },
-        nextFrame () {
-            this.current.frame = Math.min(this.current.frame + 1, Math.max(this.images.length - 1, 0))
-        },
-        prevFrame () {
-            this.current.frame = Math.max(this.current.frame - 1, 0)
-        },
         resetView () {
             if (this.images.length > this.current.frame) {
                 var image = this.images[this.current.frame];
@@ -136,10 +130,10 @@ export default {
         var vm = this;
         window.addEventListener('keyup', function(event) {
             if (event.keyCode == 39) {
-                vm.nextFrame()
+                vm.current.frame++
             }
             else if (event.keyCode == 37) {
-                vm.prevFrame()
+                vm.current.frame--
             }
         })
     },

@@ -33,17 +33,20 @@ export default {
         Progress
 	},
     data () {
+        var data = this;
         return {
             images: [],
             sequences: [],
-            current: {frame: 0, sequence: -1},
+            current: {_frame: 0, set frame(value) {
+                this._frame = Math.max(Math.min(value, Math.max(data.images.length - 1, 0)), 0)
+            }, get frame () {return this._frame}, sequence: -1},
             progress: {loading: false, loaded: 0, total: 0},
             options: {markerSize: 5}
         }
     },
     methods: {
         exportCSV () {
-            var output = [["x", "y", "frame_number", "sequence_id", "sequence_annotation"]];
+            var output = [["x", "y", "frame_number", "sequence_id", "sequence_annotation", "number_of_points"]];
             var sep = ',';
             for (var i = 0; i < this.sequences.length; i++) {
                 var points = this.sequences[i].points.concat();
@@ -51,7 +54,7 @@ export default {
                     return a.frame - b.frame;
                 });
                 for (var j = 0; j < points.length; j++) {
-                    output.push([points[j].x, points[j].y, points[j].frame, i, this.sequences[i].name].join(','));
+                    output.push([points[j].x, points[j].y, points[j].frame, i, this.sequences[i].name, points.length].join(','));
                 }
             }
             output = output.join('\n');
