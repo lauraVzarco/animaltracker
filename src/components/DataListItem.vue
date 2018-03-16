@@ -3,7 +3,7 @@
         <span>Name</span>
         <input type="text" v-model="sequence.name">
         <span>
-            {{lastFrame - firstFrame + 1}} Image{{lastFrame > firstFrame ? 's' : ''}} [<button title="jump to first image" style="padding: 0px" @click="current.frame = firstFrame">{{ firstFrame + 1 }}</button><span v-if="lastFrame > firstFrame"> to <button style="padding: 0px" title="jump to last image" @click="current.frame = lastFrame">{{ lastFrame + 1 }}</button></span>]
+            {{sequence.points.length}} point{{sequence.points.length > 1 ? 's' : ''}} [Image{{lastFrame > firstFrame ? 's' : ''}} <button title="jump to first image" style="padding: 0px" @click="current.frame = firstFrame">{{ firstFrame + 1 }}</button><span v-if="lastFrame > firstFrame"> to <button style="padding: 0px" title="jump to last image" @click="current.frame = lastFrame">{{ lastFrame + 1 }}</button></span>]
         </span>
         <button style="float:right" class="glyphicon glyphicon-remove" @click="deleteSequence" title="delete entire track"></button>
         <button style="float:right" :class="['glyphicon', sequence.hidden ? 'glyphicon-eye-close' : 'glyphicon-eye-open']" @click="hideSequence" :title="action"></button>
