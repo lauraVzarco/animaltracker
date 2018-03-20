@@ -93,6 +93,7 @@ export default {
             }
         },
         newSequence () {
+            this.sequences.map(sequence => {sequence.hidden = true});
             var ids = this.sequences.map(sequence => sequence.id).sort();
             var new_id = 0;
             while (ids.includes(new_id)) {
