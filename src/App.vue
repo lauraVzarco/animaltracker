@@ -22,7 +22,7 @@
 				</div>
 			</div>
 		</div>
-		<MetaDataViewer :metadata="metadata"/>
+		<MetaDataViewer :metadata="images[current.frame]  || defaultMetadata"/>
 		<Interface
 			:sequences="sequences"
 			:images="images"
@@ -53,7 +53,7 @@ export default {
 		MetaDataViewer
 	},
 	data() {
-		var data = this;
+		const data = this;
 		return {
 			images: [],
 			sequences: [],
@@ -72,8 +72,17 @@ export default {
 			},
 			progress: { loading: false, loaded: 0, total: 0 },
 			options: { markerSize: 5 },
-			metadata: {}
+			defaultMetadata: {
+				exifdata: {},
+				userData: {},
+				selectedUserData: []
+			}
 		};
+	},
+	computed: {
+		metadata() {
+			return this.images[this.current.frame] || this.defaultMetadata;
+		}
 	},
 	methods: {
 		exportCSV() {
@@ -118,10 +127,10 @@ export default {
 			document.body.removeChild(exportLink);
 		},
 		handleFiles(event) {
-			var images = this.images;
+			const images = this.images;
 			images.splice(0, images.length);
 
-			var files = [].slice.call(event.target.files);
+			const files = [].slice.call(event.target.files);
 			files.sort(function(a, b) {
 				return a.name.localeCompare(b.name);
 			});
@@ -129,38 +138,58 @@ export default {
 			this.progress.total = files.length;
 			this.progress.loaded = 0;
 			this.progress.loading = true;
-			const vm = this;
-			EXIF.getData(files[0], function(...args) {
-				console.log(args, "args");
-				console.log("image info", this);
-				console.log("exif data", this.exifdata);
-				vm.metadata = this.exifdata;
-			});
+
+			console.log(files, "files");
 			this.loadImages(files);
 		},
 		getImage(file, progress) {
+			const vm = this;
 			return new Promise(function(resolve, reject) {
-				var reader = new FileReader();
-				reader.onload = () => resolve(reader.result);
+				const reader = new FileReader();
+				reader.onload = () => {
+					EXIF.getData(file, function() {
+						console.log("image info", this);
+						console.log("exif data", this.exifdata);
+						const { size, name, type, lastModified, exifdata } = this;
+						resolve({
+							src: reader.result,
+							name,
+							size,
+							type,
+							lastModified,
+							exifdata
+						});
+					});
+				};
 				reader.readAsDataURL(file);
 			}).then(function(result) {
 				return new Promise(function(resolve, reject) {
-					var image_element = new Image();
-					image_element.onload = () => resolve(image_element);
-					image_element.src = result;
-					progress.loaded++;
+					const image_element = new Image();
+					image_element.onload = () => {
+						progress.loaded++;
+						const { width, height, src } = image_element;
+						resolve({
+							...result,
+							width,
+							height,
+							userData: {},
+							selectedUserData: [],
+							selectedExifData: []
+						});
+					};
+					image_element.src = result.src;
 				});
 			});
 		},
 		loadImages(files) {
-			var promises = files.map(file => {
+			const promises = files.map(file => {
 				return this.getImage(file, this.progress);
 			});
-			var app = this;
-
+			const app = this;
 			Promise.all(promises)
 				.then(function(image_elements) {
 					app.images.push.apply(app.images, image_elements);
+					console.log("img el", image_elements);
 					app.progress.loading = false;
 				})
 				.catch(function(image_elements) {
