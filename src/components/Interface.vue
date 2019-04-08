@@ -1,6 +1,6 @@
 <template>
 	<div id="interface">
-		<svg id="main" width="960" height="540" overflow="hidden">
+		<svg id="main" width="720" height="405" overflow="hidden">
 			<g>
 				<image
 					v-if="images.length > 0"
@@ -132,17 +132,17 @@ export default {
 		resetView() {
 			if (this.images.length > this.current.frame) {
 				var image = this.images[this.current.frame];
-				if (image.width / image.height > 960 / 540) {
-					this.transform.scale = 960 / image.width;
+				if (image.width / image.height > 720 / 405) {
+					this.transform.scale = 720 / image.width;
 					this.transform.x = 0;
 					this.transform.y =
-						(540 - image.height * this.transform.scale) /
+						(405 - image.height * this.transform.scale) /
 						2 /
 						this.transform.scale;
 				} else {
-					this.transform.scale = 540 / image.height;
+					this.transform.scale = 405 / image.height;
 					this.transform.x =
-						(960 - image.width * this.transform.scale) /
+						(720 - image.width * this.transform.scale) /
 						2 /
 						this.transform.scale;
 					this.transform.y = 0;
@@ -207,5 +207,9 @@ export default {
 <style>
 #main {
 	background-color: #aaa;
+	margin-left: 6%;
+}
+#interface {
+	width: 75%;
 }
 </style>

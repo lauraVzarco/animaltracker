@@ -35,7 +35,7 @@ export default {
 	},
 	render(h) {
 		return (
-			<div>
+			<div class="metadataContainer">
 				<div>Image Metadata for {this.metadata.name}</div>
 				<div>
 					{Object.entries(this.metadata.exifdata).map(([key, value]) => {
@@ -46,7 +46,7 @@ export default {
 									checked={this.metadata.selectedExifData.includes(key)}
 									onInput={() => this.toggleExifField(key)}
 								/>
-								{key}:{value}
+								{key}: {value}
 							</div>
 						);
 					})}
@@ -58,7 +58,7 @@ export default {
 									checked={this.metadata.selectedUserData.includes(key)}
 									onInput={() => this.toggleUserDataField(key)}
 								/>
-								{key}:{value}
+								{key}: {value}
 							</div>
 						);
 					})}
@@ -69,5 +69,17 @@ export default {
 	}
 };
 </script>
+<style>
+.metadataContainer {
+	width: 200px;
+	height: 405px;
+	overflow: scroll;
+	background: #aaaa;
+	padding: 10px;
+	margin-left: 8%;
+	align-content: center;
+}
+</style>
+
 
 

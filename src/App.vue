@@ -22,16 +22,17 @@
 				</div>
 			</div>
 		</div>
-		<MetaDataViewer :metadata="images[current.frame]  || defaultMetadata"/>
-		<Interface
-			:sequences="sequences"
-			:images="images"
-			class="container"
-			:current="current"
-			:options="options"
-		/>
-		<Progress v-if="progress.loading" :progress="progress"></Progress>
-
+		<div class="interfaceContainer">
+			<Interface
+				:sequences="sequences"
+				:images="images"
+				class="container"
+				:current="current"
+				:options="options"
+			/>
+			<Progress v-if="progress.loading" :progress="progress"></Progress>
+			<MetaDataViewer :metadata="images[current.frame]  || defaultMetadata"/>
+		</div>
 		<div class="container">
 			<DataList :sequences="sequences" :current="current"/>
 		</div>
@@ -206,9 +207,12 @@ export default {
 }
 #options {
 	display: inline-block;
-	float: right;
 }
 #markerSize {
 	width: 150px;
+}
+
+.interfaceContainer {
+	display: flex;
 }
 </style>
