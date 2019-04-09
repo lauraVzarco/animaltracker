@@ -31,7 +31,10 @@
         :options="options"
       />
       <Progress v-if="progress.loading" :progress="progress"></Progress>
-      <MetaDataViewer :metadata="images[current.frame]  || defaultMetadata"/>
+      <MetaDataViewer
+        v-if="images.length > 0"
+        :metadata="images[current.frame]  || defaultMetadata"
+      />
     </div>
     <div class="container">
       <DataList :sequences="sequences" :current="current"/>
