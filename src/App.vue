@@ -220,7 +220,7 @@ export default {
 
 <style>
 #app {
-  height: 100vh;
+  margin-top: 50px;
 }
 #options {
   display: inline-block;
@@ -228,7 +228,9 @@ export default {
 #markerSize {
   width: 150px;
 }
-
+.container {
+  width: 720px;
+}
 .interfaceContainer {
   display: flex;
 }

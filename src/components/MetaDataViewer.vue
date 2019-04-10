@@ -2,84 +2,105 @@
 <script>
 import UserDefinedField from "./UserDefinedField";
 export default {
-	components: { UserDefinedField },
-	props: {
-		metadata: {
-			type: Object,
-			required: true
-		}
-	},
-	methods: {
-		toggleExifField(field) {
-			if (this.metadata.selectedExifData.includes(field)) {
-				const index = this.metadata.selectedExifData.indexOf(field);
-				this.metadata.selectedExifData.splice(index, 1);
-			} else {
-				this.metadata.selectedExifData.push(field);
-			}
-			console.log(this.metadata.selectedExifData);
-		},
-		toggleUserDataField(field) {
-			if (this.metadata.selectedUserData.includes(field)) {
-				const index = this.metadata.selectedUserData.indexOf(field);
-				this.metadata.selectedUserData.splice(index, 1);
-			} else {
-				this.metadata.selectedUserData.push(field);
-			}
-		},
-		addField(key, value) {
-			this.$set(this.metadata.userData, key, value);
-			this.metadata.selectedUserData.push(key);
-			console.log(key, value, this.metadata);
-		}
-	},
-	render(h) {
-		return (
-			<div class="metadataContainer">
-				<div>Image Metadata for {this.metadata.name}</div>
-				<div>
-					{Object.entries(this.metadata.exifdata).map(([key, value]) => {
-						return (
-							<div>
-								<input
-									type="checkbox"
-									checked={this.metadata.selectedExifData.includes(key)}
-									onInput={() => this.toggleExifField(key)}
-								/>
-								{key}: {value}
-							</div>
-						);
-					})}
-					{Object.entries(this.metadata.userData).map(([key, value]) => {
-						return (
-							<div>
-								<input
-									type="checkbox"
-									checked={this.metadata.selectedUserData.includes(key)}
-									onInput={() => this.toggleUserDataField(key)}
-								/>
-								{key}: {value}
-							</div>
-						);
-					})}
-				</div>
-				<UserDefinedField addField={this.addField} />
-			</div>
-		);
-	}
+  components: { UserDefinedField },
+  props: {
+    metadata: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    toggleExifField(field) {
+      if (this.metadata.selectedExifData.includes(field)) {
+        const index = this.metadata.selectedExifData.indexOf(field);
+        this.metadata.selectedExifData.splice(index, 1);
+      } else {
+        this.metadata.selectedExifData.push(field);
+      }
+      console.log(this.metadata.selectedExifData);
+    },
+    toggleUserDataField(field) {
+      if (this.metadata.selectedUserData.includes(field)) {
+        const index = this.metadata.selectedUserData.indexOf(field);
+        this.metadata.selectedUserData.splice(index, 1);
+      } else {
+        this.metadata.selectedUserData.push(field);
+      }
+    },
+    addField(key, value) {
+      this.$set(this.metadata.userData, key, value);
+      this.metadata.selectedUserData.push(key);
+      console.log(key, value, this.metadata);
+    }
+  },
+  render(h) {
+    return (
+      <div class="metadataContainer">
+        <div class="title">Image Metadata for {this.metadata.name}</div>
+        <div>
+          {Object.entries(this.metadata.exifdata).map(([key, value]) => {
+            return (
+              <div>
+                <div class="metadata-fields">
+                  <input
+                    type="checkbox"
+                    checked={this.metadata.selectedExifData.includes(key)}
+                    onInput={() => this.toggleExifField(key)}
+                  />
+                  <div class="key">{key}:</div> <div class="value">{value}</div>
+                </div>
+              </div>
+            );
+          })}
+          {Object.entries(this.metadata.userData).map(([key, value]) => {
+            return (
+              <div>
+                <div class="metadata-fields">
+                  <input
+                    type="checkbox"
+                    checked={this.metadata.selectedUserData.includes(key)}
+                    onInput={() => this.toggleUserDataField(key)}
+                  />
+                  <div class="key">{key}:</div> <div class="value">{value}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <UserDefinedField addField={this.addField} />
+      </div>
+    );
+  }
 };
 </script>
 <style>
 .metadataContainer {
-	width: 200px;
-	height: 405px;
-	overflow: scroll;
-	background: #aaaa;
-	padding: 10px;
-	margin-left: 8%;
-	align-content: center;
+  width: 300px;
+  height: 405px;
+  overflow: scroll;
+  background: #aaaa;
+  padding: 10px;
+  margin-right: 50px;
+  align-content: center;
+}
+.title {
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.metadata-fields {
+  display: flex;
+  flex-direction: row;
+}
+
+.key {
+  font-weight: bold;
+  margin-left: 6px;
+  margin-right: 6px;
+}
+.value {
+  margin-right: 6px;
 }
 </style>
-
-
-
