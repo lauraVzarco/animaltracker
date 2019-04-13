@@ -88,7 +88,7 @@ export default {
           this.sequences.push({
             points: [],
             id: this.current.sequence,
-            name: "new",
+            fields: { name: "new" },
             hidden: false
           });
         } else if (
@@ -118,11 +118,11 @@ export default {
       }
     },
     newSequence() {
-      this.sequences.map(sequence => {
+      this.sequences.forEach(sequence => {
         sequence.hidden = true;
       });
-      var ids = this.sequences.map(sequence => sequence.id).sort();
-      var new_id = 0;
+      const ids = this.sequences.map(sequence => sequence.id).sort();
+      let new_id = 0;
       while (ids.includes(new_id)) {
         new_id++;
       }

@@ -49,6 +49,10 @@ import Progress from "./components/Progress.vue";
 import MetaDataViewer from "./components/MetaDataViewer.vue";
 import EXIF from "exif-js";
 
+const getUniqueArray = arr => {
+  return [...new Set(arr)];
+};
+
 export default {
   components: {
     DataList,
@@ -96,9 +100,9 @@ export default {
           "y",
           "frame_number",
           "sequence_id",
-          "sequence_annotation",
           "number_of_points",
-          ...this.getAllSelectedMetadata()
+          ...this.getAllSelectedMetadata(),
+          ...this.getAllSequenceFields()
         ]
       ];
       var sep = ",";
@@ -114,11 +118,13 @@ export default {
               points[j].y,
               points[j].frame,
               i,
-              this.sequences[i].name,
               points.length,
               ...this.getAllSelectedMetadata().map(field => {
                 const image = this.images[points[j].frame];
                 return image.exifdata[field] || image.userData[field];
+              }),
+              ...this.getAllSequenceFields().map(field => {
+                return this.sequences[i].fields[field];
               })
             ].join(",")
           );
@@ -206,13 +212,18 @@ export default {
         });
     },
     getAllSelectedMetadata() {
-      return [
-        ...new Set(
-          this.images.reduce((acc, { selectedUserData, selectedExifData }) => {
-            return acc.concat(selectedUserData, selectedExifData);
-          }, [])
-        )
-      ];
+      return getUniqueArray(
+        this.images.reduce((acc, { selectedUserData, selectedExifData }) => {
+          return acc.concat(selectedUserData, selectedExifData);
+        }, [])
+      );
+    },
+    getAllSequenceFields() {
+      return getUniqueArray(
+        this.sequences.reduce((acc, sequence) => {
+          return acc.concat(Object.keys(sequence.fields));
+        }, [])
+      );
     }
   }
 };
