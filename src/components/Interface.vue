@@ -88,6 +88,7 @@ export default {
 				if (!this.sequences.some(seq => seq.id == this.current.sequence)) {
 					this.sequences.push({
 						points: [],
+						deletedPoints: [],
 						id: this.current.sequence,
 						fields: { name: "new" },
 						hidden: false
@@ -106,15 +107,20 @@ export default {
 			}
 		},
 		deletePoint() {
-			var sequence_id = this.sequences.findIndex(
+			const sequenceIndex = this.sequences.findIndex(
 				seq => seq.id == this.current.sequence
 			);
-			var points = this.sequences[sequence_id].points;
-			var current_point = points.findIndex(p => p.frame == this.current.frame);
-			if (current_point >= 0) {
-				points.splice(current_point, 1);
+			const sequence = this.sequences[sequenceIndex];
+			const points = sequence.points;
+			const currentPointIndex = points.findIndex(
+				p => p.frame == this.current.frame
+			);
+			if (currentPointIndex >= 0) {
+				const [deletedPoint] = points.splice(currentPointIndex, 1);
+				sequence.deletedPoints.push(deletedPoint);
 				if (points.length == 0) {
-					this.sequences.splice(sequence_id, 1);
+					const [deletedSequence] = this.sequences.splice(sequenceIndex, 1);
+					this.deletedSequences.push(deletedSequence);
 				}
 			}
 		},

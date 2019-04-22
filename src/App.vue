@@ -12,6 +12,7 @@
 					v-if="showPrompt"
 					v-on:addToCurrentSet="addToCurrentSet"
 					v-on:replaceSet="replaceSet"
+					:imagesNumber="newImages.length"
 				/>
 				<button type="button" class="btn" @click="exportCSV">Export CSV</button>
 				<div id="options">
@@ -30,6 +31,7 @@
 		<div class="interfaceContainer">
 			<Interface
 				:sequences="sequences"
+				:deletedSequences="deletedSequences"
 				:images="images"
 				class="container"
 				:current="current"
@@ -71,6 +73,7 @@ export default {
 			newImages: [],
 			showPrompt: false,
 			sequences: [],
+			deletedSequences: [],
 			current: {
 				_frame: 0,
 				set frame(value) {
@@ -211,7 +214,6 @@ export default {
 						app.showPrompt = true;
 					} else {
 						app.images.push.apply(app.images, image_elements);
-						this.current.frame = 0;
 					}
 					app.progress.loading = false;
 				})
