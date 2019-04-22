@@ -17,7 +17,6 @@ export default {
       } else {
         this.metadata.selectedExifData.push(field);
       }
-      console.log(this.metadata.selectedExifData);
     },
     toggleUserDataField(field) {
       if (this.metadata.selectedUserData.includes(field)) {
@@ -30,7 +29,6 @@ export default {
     addField(key, value) {
       this.$set(this.metadata.userData, key, value);
       this.metadata.selectedUserData.push(key);
-      console.log(key, value, this.metadata);
     }
   },
   render(h) {

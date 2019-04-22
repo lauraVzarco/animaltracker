@@ -159,8 +159,6 @@ export default {
 			this.progress.total = files.length;
 			this.progress.loaded = 0;
 			this.progress.loading = true;
-
-			console.log(files, "files");
 			this.loadImages(files);
 		},
 		getImage(file, progress) {
@@ -169,8 +167,6 @@ export default {
 				const reader = new FileReader();
 				reader.onload = () => {
 					EXIF.getData(file, function() {
-						console.log("image info", this);
-						console.log("exif data", this.exifdata);
 						const { size, name, type, lastModified, exifdata } = this;
 						resolve({
 							src: reader.result,
@@ -238,7 +234,6 @@ export default {
 		addToCurrentSet() {
 			this.images.push.apply(this.images, this.newImages);
 			this.newImages = [];
-			console.log(this);
 			this.showPrompt = false;
 			this.current.frame = 0;
 		},
