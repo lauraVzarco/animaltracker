@@ -124,8 +124,8 @@ export default {
         sequence.deletedPoints.push(deletedPoint);
         if (points.length == 0) {
           const [deletedSequence] = this.sequences.splice(sequenceIndex, 1);
-		  this.deletedSequences.push(deletedSequence);
-		  this.current.sequence = this.sequences.length-1;
+          this.deletedSequences.push(deletedSequence);
+          this.current.sequence = this.sequences.length - 1;
         }
       }
       console.log("delete", this);
