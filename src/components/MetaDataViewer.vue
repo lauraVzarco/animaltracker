@@ -1,4 +1,3 @@
-
 <script>
 import UserDefinedField from "./UserDefinedField";
 export default {
@@ -26,9 +25,13 @@ export default {
         this.metadata.selectedUserData.push(field);
       }
     },
-    addField(key, value) {
-      this.$set(this.metadata.userData, key, value);
+    addField(key) {
+      this.$set(this.metadata.userData, key, "");
       this.metadata.selectedUserData.push(key);
+    },
+    hideUnselectedFields() {},
+    changeUserSelectedValue(key, value) {
+      this.$set(this.metadata.userData, key, value);
     }
   },
   render(h) {
@@ -36,6 +39,10 @@ export default {
       <div class="metadataContainer">
         <div class="title">Image Metadata for {this.metadata.name}</div>
         <div>
+          <button onClick={this.hideUnselectedFields}>
+            {" "}
+            Hide all Unselected Fields{" "}
+          </button>
           {Object.entries(this.metadata.exifdata).map(([key, value]) => {
             return (
               <div>
@@ -59,7 +66,14 @@ export default {
                     checked={this.metadata.selectedUserData.includes(key)}
                     onInput={() => this.toggleUserDataField(key)}
                   />
-                  <div class="key">{key}:</div> <div class="value">{value}</div>
+                  <div class="key">{key}:</div>{" "}
+                  <input
+                    type="text"
+                    onInput={e =>
+                      this.changeUserSelectedValue(key, e.target.value)
+                    }
+                    value={value}
+                  />
                 </div>
               </div>
             );

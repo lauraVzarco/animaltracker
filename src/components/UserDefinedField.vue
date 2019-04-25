@@ -8,8 +8,7 @@ export default {
   },
   data() {
     return {
-      key: "",
-      value: ""
+      key: ""
     };
   },
   render(h) {
@@ -24,25 +23,15 @@ export default {
               this.key = e.target.value;
             }}
           />
-          :
-          <input
-            class="input"
-            type="text"
-            value={this.value}
-            onInput={e => {
-              this.value = e.target.value;
-            }}
-          />
         </div>
         <button
           class="add-metadata"
           onClick={() => {
-            this.addField(this.key, this.value);
+            this.addField(this.key);
             this.key = "";
-            this.value = "";
           }}
         >
-          add
+          Add metadata key
         </button>
       </div>
     );
