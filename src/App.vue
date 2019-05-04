@@ -41,6 +41,8 @@
       <MetaDataViewer
         v-if="images.length > 0"
         :metadata="images[current.frame]  || defaultMetadata"
+        :listOfAllMetadata=""
+        :listOfAllSelectedMetadata=""
       />
     </div>
     <div class="container">
@@ -69,8 +71,8 @@ export default {
     MetaDataViewer,
     UploadImagesPrompt
   },
-beforeDestroy() {
-    alert('Are you sure you want to leave?');
+  beforeDestroy() {
+    alert("Are you sure you want to leave?");
   },
   data() {
     const data = this;
@@ -99,17 +101,23 @@ beforeDestroy() {
         exifdata: {},
         userData: {},
         selectedUserData: []
-      }
+      },
+      selectedImagesData:[
+
+      ]
     };
   },
   computed: {
-    metadata() {
+    currentImageMetadata() {
       return this.images[this.current.frame] || this.defaultMetadata;
+    },
+    allImagesMetadataKeys(){
+      
     }
   },
   methods: {
     exportCSV() {
-      var output = [
+      const output = [
         [
           "x",
           "y",
@@ -120,13 +128,13 @@ beforeDestroy() {
           ...this.getAllSequenceFields()
         ]
       ];
-      var sep = ",";
-      for (var i = 0; i < this.sequences.length; i++) {
-        var points = this.sequences[i].points.concat();
+      const sep = ",";
+      for (let i = 0; i < this.sequences.length; i++) {
+        const points = this.sequences[i].points.concat();
         points.sort(function(a, b) {
           return a.frame - b.frame;
         });
-        for (var j = 0; j < points.length; j++) {
+        for (let j = 0; j < points.length; j++) {
           output.push(
             [
               points[j].x,

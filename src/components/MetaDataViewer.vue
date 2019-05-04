@@ -6,7 +6,8 @@ export default {
     metadata: {
       type: Object,
       required: true
-    }
+    },
+    listOfAllMetadata
   },
   methods: {
     toggleExifField(field) {
@@ -40,8 +41,7 @@ export default {
         <div class="title">Image Metadata for {this.metadata.name}</div>
         <div>
           <button onClick={this.hideUnselectedFields}>
-            {" "}
-            Hide all Unselected Fields{" "}
+            Hide all Unselected Fields
           </button>
           {Object.entries(this.metadata.exifdata).map(([key, value]) => {
             return (
