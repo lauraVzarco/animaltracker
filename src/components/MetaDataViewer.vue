@@ -2,33 +2,30 @@
 import UserDefinedField from "./UserDefinedField";
 export default {
   components: { UserDefinedField },
+  data() {
+    return {
+      exifdata: [{key: 'piwi', selected: true}, {key: 'chocu', selected: false}],
+      userData: []
+    }
+  },
   props: {
     metadata: {
       type: Object,
       required: true
     },
-    listOfAllMetadata
   },
   methods: {
     toggleExifField(field) {
-      if (this.metadata.selectedExifData.includes(field)) {
-        const index = this.metadata.selectedExifData.indexOf(field);
-        this.metadata.selectedExifData.splice(index, 1);
-      } else {
-        this.metadata.selectedExifData.push(field);
-      }
+      const element = this.exifdata.find(el => el.key === field);
+      this.$set(element, 'selected', !element.selected);
     },
     toggleUserDataField(field) {
-      if (this.metadata.selectedUserData.includes(field)) {
-        const index = this.metadata.selectedUserData.indexOf(field);
-        this.metadata.selectedUserData.splice(index, 1);
-      } else {
-        this.metadata.selectedUserData.push(field);
-      }
+      const element = this.userData.find(el => el.key === field);
+      this.$set(element, 'selected', !element.selected);
     },
-    addField(key) {
-      this.$set(this.metadata.userData, key, "");
-      this.metadata.selectedUserData.push(key);
+    addUserField(key) {
+      // this.$set(this.metadata.userData, key, "");
+      this.userData.push({key, selected: true});
     },
     hideUnselectedFields() {},
     changeUserSelectedValue(key, value) {
@@ -41,15 +38,15 @@ export default {
         <div class="title">Image Metadata for {this.metadata.name}</div>
         <div>
           <button onClick={this.hideUnselectedFields}>
-            Hide all Unselected Fields
+            Hide/show all Unselected Fields
           </button>
-          {Object.entries(this.metadata.exifdata).map(([key, value]) => {
+          {Object.entries(this.exifdata).map(({key, selected}) => {
             return (
               <div>
                 <div class="metadata-fields">
                   <input
                     type="checkbox"
-                    checked={this.metadata.selectedExifData.includes(key)}
+                    checked={selected}
                     onInput={() => this.toggleExifField(key)}
                   />
                   <div class="key">{key}:</div> <div class="value">{value}</div>
@@ -57,13 +54,13 @@ export default {
               </div>
             );
           })}
-          {Object.entries(this.metadata.userData).map(([key, value]) => {
+          {Object.entries(this.userData).map(({key, selected}) => {
             return (
               <div>
                 <div class="metadata-fields">
                   <input
                     type="checkbox"
-                    checked={this.metadata.selectedUserData.includes(key)}
+                    checked={selected}
                     onInput={() => this.toggleUserDataField(key)}
                   />
                   <div class="key">{key}:</div>{" "}
@@ -72,14 +69,14 @@ export default {
                     onInput={e =>
                       this.changeUserSelectedValue(key, e.target.value)
                     }
-                    value={value}
+                    value={this.currentImage.userData[key] || ''}
                   />
                 </div>
               </div>
             );
           })}
         </div>
-        <UserDefinedField addField={this.addField} />
+        <UserDefinedField addField={this.addUserField} />
       </div>
     );
   }

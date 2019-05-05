@@ -41,8 +41,6 @@
       <MetaDataViewer
         v-if="images.length > 0"
         :metadata="images[current.frame]  || defaultMetadata"
-        :listOfAllMetadata=""
-        :listOfAllSelectedMetadata=""
       />
     </div>
     <div class="container">
@@ -70,9 +68,6 @@ export default {
     Progress,
     MetaDataViewer,
     UploadImagesPrompt
-  },
-  beforeDestroy() {
-    alert("Are you sure you want to leave?");
   },
   data() {
     const data = this;
@@ -102,9 +97,7 @@ export default {
         userData: {},
         selectedUserData: []
       },
-      selectedImagesData:[
-
-      ]
+      selectedImagesData:[]
     };
   },
   computed: {
@@ -119,6 +112,7 @@ export default {
     exportCSV() {
       const output = [
         [
+          "image_name",
           "x",
           "y",
           "frame_number",
@@ -135,15 +129,16 @@ export default {
           return a.frame - b.frame;
         });
         for (let j = 0; j < points.length; j++) {
+          const image = this.images[points[j].frame];
           output.push(
             [
+              image.name,
               points[j].x,
               points[j].y,
               points[j].frame,
               i,
               points.length,
               ...this.getAllSelectedMetadata().map(field => {
-                const image = this.images[points[j].frame];
                 return image.exifdata[field] || image.userData[field];
               }),
               ...this.getAllSequenceFields().map(field => {
@@ -153,17 +148,16 @@ export default {
           );
         }
       }
-      output = output.join("\n");
+      const outputString = output.join("\n");
       var exportLink = document.createElement("a");
       exportLink.setAttribute(
         "href",
-        "data:text/csv;base64," + window.btoa(output)
+        "data:text/csv;base64," + window.btoa(outputString)
       );
       exportLink.setAttribute("download", "coordinates.csv");
       document.body.appendChild(exportLink);
       exportLink.click();
       document.body.removeChild(exportLink);
-      browser.downloads.showDefaultFolder();
     },
     handleFiles(event) {
       const files = [].slice.call(event.target.files);
