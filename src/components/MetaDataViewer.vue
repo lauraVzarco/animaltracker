@@ -4,59 +4,77 @@ export default {
   components: { UserDefinedField },
   data() {
     return {
-      exifdata: [{key: 'piwi', selected: true}, {key: 'chocu', selected: false}],
-      userData: []
-    }
+      showUnselectedFields: true
+    };
   },
   props: {
-    metadata: {
+    currentImage: {
       type: Object,
       required: true
     },
+    exifdata: {
+      type: Array,
+      required: true
+    },
+    userData: {
+      type: Array,
+      required: true
+    }
   },
   methods: {
     toggleExifField(field) {
       const element = this.exifdata.find(el => el.key === field);
-      this.$set(element, 'selected', !element.selected);
+      this.$set(element, "selected", !element.selected);
     },
     toggleUserDataField(field) {
       const element = this.userData.find(el => el.key === field);
-      this.$set(element, 'selected', !element.selected);
+      this.$set(element, "selected", !element.selected);
     },
     addUserField(key) {
-      // this.$set(this.metadata.userData, key, "");
-      this.userData.push({key, selected: true});
+      this.userData.push({ key, selected: true });
     },
-    hideUnselectedFields() {},
+    toggleUnselectedFields() {
+      this.showUnselectedFields = !this.showUnselectedFields;
+    },
     changeUserSelectedValue(key, value) {
-      this.$set(this.metadata.userData, key, value);
+      this.$set(this.currentImage.userData, key, value);
     }
   },
   render(h) {
     return (
       <div class="metadataContainer">
-        <div class="title">Image Metadata for {this.metadata.name}</div>
+        <div class="title">Image Metadata for {this.currentImage.name}</div>
         <div>
-          <button onClick={this.hideUnselectedFields}>
-            Hide/show all Unselected Fields
+          <button onClick={this.toggleUnselectedFields}>
+            {this.showUnselectedFields ? "Hide" : "Show"} all Unselected Fields
           </button>
-          {Object.entries(this.exifdata).map(({key, selected}) => {
+          {this.exifdata.map(({ key, selected }) => {
+            if (selected === false && this.showUnselectedFields === false) {
+              return null;
+            }
             return (
-              <div>
+              <div key={key}>
                 <div class="metadata-fields">
                   <input
                     type="checkbox"
                     checked={selected}
                     onInput={() => this.toggleExifField(key)}
                   />
-                  <div class="key">{key}:</div> <div class="value">{value}</div>
+                  <div class="key">{key}:</div>{" "}
+                  <div class="value">
+                    {this.currentImage.exifdata[key] ||
+                      "The currently selected image does not have this field"}
+                  </div>
                 </div>
               </div>
             );
           })}
-          {Object.entries(this.userData).map(({key, selected}) => {
+          {this.userData.map(({ key, selected }) => {
+            if (selected === false && this.showUnselectedFields === false) {
+              return null;
+            }
             return (
-              <div>
+              <div key={key}>
                 <div class="metadata-fields">
                   <input
                     type="checkbox"
@@ -69,7 +87,7 @@ export default {
                     onInput={e =>
                       this.changeUserSelectedValue(key, e.target.value)
                     }
-                    value={this.currentImage.userData[key] || ''}
+                    value={this.currentImage.userData[key] || ""}
                   />
                 </div>
               </div>

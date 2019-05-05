@@ -38,10 +38,19 @@
         :options="options"
       />
       <Progress v-if="progress.loading" :progress="progress"></Progress>
-      <MetaDataViewer
-        v-if="images.length > 0"
-        :metadata="images[current.frame]  || defaultMetadata"
-      />
+      <div v-if="images.length > 0">
+        <button
+          type="button"
+          class="btn"
+          @click="showMetadataViewer = !showMetadataViewer"
+        >{{showMetadataViewer? "Hide": "Show"}} image metadata</button>
+        <MetaDataViewer
+          v-if="showMetadataViewer"
+          :currentImage="images[current.frame]  || defaultMetadata"
+          :exifdata="exifdata"
+          :userData="userData"
+        />
+      </div>
     </div>
     <div class="container">
       <DataList :sequences="sequences" :current="current"/>
@@ -94,19 +103,15 @@ export default {
       options: { markerSize: 5 },
       defaultMetadata: {
         exifdata: {},
-        userData: {},
-        selectedUserData: []
+        userData: {}
       },
-      selectedImagesData:[]
+      exifdata: [],
+      userData: [],
+      showMetadataViewer: true
     };
   },
   computed: {
-    currentImageMetadata() {
-      return this.images[this.current.frame] || this.defaultMetadata;
-    },
-    allImagesMetadataKeys(){
-      
-    }
+    allImagesMetadataKeys() {}
   },
   methods: {
     exportCSV() {
@@ -198,9 +203,7 @@ export default {
               ...result,
               width,
               height,
-              userData: {},
-              selectedUserData: [],
-              selectedExifData: []
+              userData: {}
             });
           };
           image_element.src = result.src;
@@ -220,18 +223,24 @@ export default {
           } else {
             app.images.push.apply(app.images, image_elements);
           }
+          app.exifdata = app.getExifData();
           app.progress.loading = false;
         })
         .catch(function(image_elements) {
           console.log("Error loading images");
         });
     },
-    getAllSelectedMetadata() {
+    getExifData() {
       return getUniqueArray(
-        this.images.reduce((acc, { selectedUserData, selectedExifData }) => {
-          return acc.concat(selectedUserData, selectedExifData);
+        [...this.newImages, ...this.images].reduce((acc, image) => {
+          return acc.concat(Object.keys(image.exifdata));
         }, [])
-      );
+      ).map(key => ({ key, selected: false }));
+    },
+    getAllSelectedMetadata() {
+      return [...this.exifdata, ...this.userData]
+        .filter(el => el.selected)
+        .map(({ key }) => key);
     },
     getAllSequenceFields() {
       return getUniqueArray(

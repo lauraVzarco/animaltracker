@@ -13,7 +13,7 @@ export default {
   },
   render(h) {
     return (
-      <div>
+      <form>
         <div class="user-metadata">
           <input
             class="input"
@@ -26,14 +26,15 @@ export default {
         </div>
         <button
           class="add-metadata"
-          onClick={() => {
+          onClick={e => {
+            e.preventDefault();
             this.addField(this.key);
             this.key = "";
           }}
         >
           Add metadata key
         </button>
-      </div>
+      </form>
     );
   }
 };
@@ -59,4 +60,3 @@ export default {
   margin: 0 auto;
 }
 </style>
-
