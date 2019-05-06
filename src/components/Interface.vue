@@ -39,7 +39,6 @@
 ​
 <script>
 import Sequence from "./Sequence.vue";
-​
 export default {
  components: {
   Sequence
@@ -87,7 +86,6 @@ export default {
    var [mouse_x, mouse_y] = event;
    var x = (mouse_x - this.transform.x) / this.transform.scale;
    var y = (mouse_y - this.transform.y) / this.transform.scale;
-​
    if (this.current.sequence >= 0) {
     if (!this.sequences.some(seq => seq.id == this.current.sequence)) {
      this.sequences.push({
@@ -104,7 +102,6 @@ export default {
     ) {
      return;
     }
-​
     this.sequences
      .find(seq => seq.id == this.current.sequence)
      .points.push({ x: x, y: y, frame: this.current.frame });
@@ -201,7 +198,6 @@ export default {
  },
  mounted: function() {
   var ui = this;
-​
   this.zoom = d3.zoom().on("zoom", function() {
    ui.transform.x = d3.event.transform.x;
    ui.transform.y = d3.event.transform.y;
@@ -213,7 +209,6 @@ export default {
     })`
    );
   });
-​
   d3.select("#main")
    .on("click", function() {
     if (ui.mode == "add") {
