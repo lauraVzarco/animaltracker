@@ -3,10 +3,10 @@
     :class="['list-group-item', current.sequence == sequence.id ? 'selected' : '']"
     @click="selectSequence"
   >
-    <ul>
-      <li v-for="field in sequenceFields" :key="field">
-        <span>{{field}}</span>
-        <input type="text" v-model="sequence.fields[field]">
+    <ul class="field-item">
+      <li class="field-data" v-for="field in sequenceFields" :key="field">
+        <th class="key">{{field}}</th>
+        <td><input class="value" type="text" v-model="sequence.fields[field]"></td>
       </li>
     </ul>
     <span>
@@ -105,4 +105,27 @@ input {
 input {
   color: black;
 }
+.field-item{
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  text-align: left;
+  overflow-x: scroll;
+  max-width: 100%;
+}
+.field-data{
+  display: flex;
+  flex-direction: column;
+   border: 1px solid black;
+}
+.value{
+  border-top: 1px solid black;
+  padding: 2px;
+  margin-left: 0;
+  margin-right: 0;
+}
+.value:first-child{
+  border-left:1px solid black;
+}
+
 </style>
