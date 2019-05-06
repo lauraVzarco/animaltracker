@@ -6,7 +6,7 @@
     <ul class="field-item">
       <li class="field-data" v-for="field in sequenceFields" :key="field">
         <th class="key">{{field}}</th>
-        <td><input class="value" type="text" v-model="sequence.fields[field]"></td>
+        <td class="value"><input  type="text" v-model="sequence.fields[field]"></td>
       </li>
     </ul>
     <span>
