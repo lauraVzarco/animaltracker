@@ -1,15 +1,22 @@
 <template>
   <div v-if="sequences.length > 0" id="trackList">
     <h3>Tracks</h3>
-    <form>
-      <input type="text" v-model="newSequenceField">
-      <button
-        @click="addSequenceField"
-        :disabled="!newSequenceField.length > 0"
-      >Add field to all sequences</button>
-    </form>
-    <button @click="hideAllSequences">Show / Hide all sequences</button>
-    <ul class="list-group">
+    <div class="buttonFields">
+      <form>
+        <input type="text" v-model="newSequenceField">
+        <button
+          @click="addSequenceField"
+          :disabled="!newSequenceField.length > 0"
+        >Add field to all sequences</button>
+      </form>
+      <button @click="hideAllSequences">Show / Hide all sequences</button>
+    </div>
+    <table class="list-group">
+      <tr class="list-group-item">
+        <th v-for="field in sequenceFields" :key="field" class="field-data-head">{{field}}</th>
+        <th class="field-data-head">Image points</th>
+        <th class="field-data-head">Image options</th>
+      </tr>
       <DataListItem
         v-for="sequence in sortedSequences"
         :key="sequence.id"
@@ -18,7 +25,7 @@
         :current="current"
         v-on:deleteSequence="sequences.splice(sequences.findIndex(x => x == sequence), 1)"
       />
-    </ul>
+    </table>
   </div>
 </template>
 
@@ -89,5 +96,19 @@ export default {
 <style>
 #trackList {
   width: 960px;
+  overflow-x: scroll;
+}
+
+.buttonFields {
+  display: flex;
+  flex-direction: row;
+}
+.field-data-head {
+  display: flex;
+  flex-direction: column;
+  width: 178px;
+  padding: 2px;
+  text-align: right;
+  border: 1px solid black;
 }
 </style>

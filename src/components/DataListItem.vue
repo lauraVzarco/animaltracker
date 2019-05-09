@@ -1,15 +1,12 @@
 <template>
-  <li
+  <tr
     :class="['list-group-item', current.sequence == sequence.id ? 'selected' : '']"
     @click="selectSequence"
   >
-    <ul class="field-item">
-      <li class="field-data" v-for="field in sequenceFields" :key="field">
-        <th class="key">{{field}}</th>
-        <td class="value"><input  type="text" v-model="sequence.fields[field]"></td>
-      </li>
-    </ul>
-    <span>
+    <td class="field-data" v-for="field in sequenceFields" :key="field">
+      <input type="text" v-model="sequence.fields[field]">
+    </td>
+    <td class="field-data">
       {{sequence.points.length}} point{{sequence.points.length > 1 ? 's' : ''}} [Image{{lastFrame > firstFrame ? 's' : ''}}
       <button
         title="jump to first image"
@@ -24,20 +21,22 @@
           @click="current.frame = lastFrame"
         >{{ lastFrame + 1 }}</button>
       </span>]
-    </span>
-    <button
-      style="float:right"
-      class="glyphicon glyphicon-remove"
-      @click="deleteSequence"
-      title="delete entire track"
-    ></button>
-    <button
-      style="float:right"
-      :class="['glyphicon', sequence.hidden ? 'glyphicon-eye-close' : 'glyphicon-eye-open']"
-      @click="hideSequence"
-      :title="action"
-    ></button>
-  </li>
+    </td>
+    <td class="field-data">
+      <button
+        style="float:right"
+        class="glyphicon glyphicon-remove"
+        @click="deleteSequence"
+        title="delete entire track"
+      ></button>
+      <button
+        style="float:right"
+        :class="['glyphicon', sequence.hidden ? 'glyphicon-eye-close' : 'glyphicon-eye-open']"
+        @click="hideSequence"
+        :title="action"
+      ></button>
+    </td>
+  </tr>
 </template>
 
 <script>
@@ -93,6 +92,9 @@ export default {
 <style>
 .list-group-item {
   font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  padding: 0;
 }
 .selected {
   background-color: #aaa;
@@ -105,27 +107,16 @@ input {
 input {
   color: black;
 }
-.field-item{
+.field-item {
   display: flex;
   flex-direction: row;
   list-style: none;
   text-align: left;
-  overflow-x: scroll;
   max-width: 100%;
 }
-.field-data{
-  display: flex;
-  flex-direction: column;
-   border: 1px solid black;
+.field-data {
+  width: 178px;
+  border: 1px solid black;
+  border-top: none;
 }
-.value{
-  border-top: 1px solid black;
-  padding: 2px;
-  margin-left: 0;
-  margin-right: 0;
-}
-.value:first-child{
-  border-left:1px solid black;
-}
-
 </style>
